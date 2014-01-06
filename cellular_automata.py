@@ -30,9 +30,12 @@ class Automaton(object):
         
     def next(self):
         'using current object properties, move object to next position and return new pos.'
+        return self.pos
         
-        
-        
+
+
+class Floater(Automaton):
+    pass
 
 # # # # 
 # Words
