@@ -14,6 +14,7 @@ Thus in the LLUV lattice, the distance between any two adjacent points is:
 LATITUDE : 0.1112 km
 LONGITUDE: 0.08798 km
 
+Pythagorean distance: 0.1412 km
 
 Conversion of u-v vectors to direction (D) and magnitude (M).
 
@@ -22,7 +23,7 @@ M = sqrt (u**2 + v**2)   where u & v are the component velocities in the ascii f
 D = arctan(v/u) where arctan is the inverse of the tangent function.  The value of D will be in radians (+-pi)
 
 
-Example cellular automaton calculation sequence:
+Example cellular automaton calculation sequence.
 
 STICKY THE STICK is dropped at point (37.820, -122.465), where the prevailing vector is:
 
@@ -34,5 +35,24 @@ Calculating, we get a magnitude and direction of:
     Mag = 78.48690012989428
     Dir = 1.7692763277322927
 
-?? So how do we figure out the next point we reach?
 
+Find destination point given distance and bearing from start point:
+
+Given a start point, initial bearing, and distance, this will calculate the destination point 
+and final bearing travelling along a (shortest distance) great circle arc.
+
+Formula: 	φ2 = asin( sin(φ1)*cos(d/R) + cos(φ1)*sin(d/R)*cos(θ) )
+  	λ2 = λ1 + atan2( sin(θ)*sin(d/R)*cos(φ1), cos(d/R)−sin(φ1)*sin(φ2) )
+
+where 	φ is latitude, λ is longitude, θ is the bearing (in radians, clockwise from north), 
+        d is the distance travelled, R is the earth’s radius (d/R is the angular distance, in radians)
+
+JavaScript: 	
+
+var lat2 = Math.asin( Math.sin(lat1)*Math.cos(d/R) + 
+              Math.cos(lat1)*Math.sin(d/R)*Math.cos(brng) );
+              
+var lon2 = lon1 + Math.atan2(Math.sin(brng)*Math.sin(d/R)*Math.cos(lat1), 
+                     Math.cos(d/R)-Math.sin(lat1)*Math.sin(lat2));
+
+For final bearing, simply take the initial bearing from the end point to the start point and reverse it (using θ = (θ+180) % 360).
